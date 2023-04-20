@@ -13,16 +13,16 @@ public class FactoryDerby implements Factory {
 	private static Connection conexion = null;
 
 	public Connection conexion() {
-		if(this.conexion==null) {
-			this.conexion2();
+		if(conexion==null) {
+			conexion2();
 		}
-		return this.conexion;
+		return conexion;
 	}
 	
-	private Connection conexion2() {
-		Connection conn = null;
+	private void conexion2() {
+		
 		try {
-			conn = DriverManager.getConnection(this.uri);
+			conexion = DriverManager.getConnection(this.uri);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -34,8 +34,6 @@ public class FactoryDerby implements Factory {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		
-		return conn;
 	}
 
 	@Override

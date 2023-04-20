@@ -38,7 +38,12 @@ public class BaseDeDatos {
 		fd.addFactura(conn);
 		fd.mostrarFacturas(conn);
 		
-		
+		pd.createTableFacturaProducto(conn);
+		pd.addFacturaProducto(conn);
+		pd.mostrarFacturaProducto(conn);
+	
+		pd.recaudacion(conn);
+		pd.listaCLientesMasVendidos(conn);
 	
 	}
 

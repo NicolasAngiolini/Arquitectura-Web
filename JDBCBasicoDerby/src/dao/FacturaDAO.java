@@ -17,6 +17,7 @@ public class FacturaDAO {
 	public void createTable(Connection conn) {
 		try {
 			String table = "CREATE TABLE factura(" + "idFactura INT, " + "id_cliente_fk INT,"
+						+ "PRIMARY KEY (idFactura),"
 						+ "FOREIGN KEY(id_cliente_fk) references cliente (idCliente))";
 
 			conn.prepareStatement(table).execute();

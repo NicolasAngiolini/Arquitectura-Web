@@ -72,8 +72,13 @@ public class ProductoDAO {
 	
 	public void createTableFacturaProducto(Connection conn) {
 		try {
-			String table ="CREATE TABLE factura_producto( "+"id_factura_fk"+"id_producto_fk"+"cantidad INT" +"FOREIGN KEY(id_factura_fk) references factura (idFactura)"+ 
-							"FOREIGN KEY(id_producto_fk) references producto (idProducto))";
+			String table ="CREATE TABLE factura_producto( "
+		+"id_factura_fk INT,"
+		+"id_producto_fk INT,"
+		+"cantidad INT,"
+		+ "PRIMARY KEY (id_factura_fk,id_producto_fk),"
+		+"FOREIGN KEY(id_factura_fk) references factura(idFactura),"
+		+"FOREIGN KEY(id_producto_fk) references producto(idProducto))";
 
 			conn.prepareStatement(table).execute();
 			conn.commit();
@@ -93,19 +98,69 @@ public class ProductoDAO {
 			e.printStackTrace();
 		}
 		for (CSVRecord row : parser) {
-			String insert = "INSERT INTO producto (idProducto, nombre, valor) VALUES(?, ?, ?)";
-			// System.out.println(row.get("idProducto"));
-			 //System.out.println(row.get("nombre"));
-			 //System.out.println(row.get("valor"));
+			String insert = "INSERT INTO factura_producto(id_factura_fk,id_producto_fk,cantidad) VALUES(?, ?, ?)";
+			
 
 			PreparedStatement ps = conn.prepareStatement(insert);
-			ps.setInt(1, Integer.parseInt(row.get("idProducto")));
-			ps.setString(2, row.get("nombre"));
-			ps.setString(3, row.get("valor"));
+			ps.setInt(1, Integer.parseInt(row.get("idFactura")));
+			ps.setInt(2, Integer.parseInt(row.get("idProducto")));
+			ps.setInt(3, Integer.parseInt(row.get("cantidad")));
 			ps.executeUpdate();
 		
 			conn.commit();
 
+		}
+	}
+	
+	public static void mostrarFacturaProducto(Connection conn) {
+		String select = "SELECT * FROM factura_producto";
+		PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement(select);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				System.out.println(rs.getInt(1) + ", " + rs.getInt(2) + ", " + rs.getInt(3));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void recaudacion(Connection conn) {
+		String select = "SELECT P.NOMBRE,SUM(P.VALOR*FP.CANTIDAD) AS TR\r\n"
+				+ "FROM PRODUCTO P JOIN FACTURA_PRODUCTO FP ON P.IDPRODUCTO = FP.ID_PRODUCTO_FK \r\n"
+				+ "GROUP BY P.NOMBRE \r\n"
+				+ "ORDER BY TR DESC\r\n"
+				+ "fetch first 1 rows only";
+		PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement(select);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				System.out.println("El producto que mas recaudo es: "+rs.getString(1) + ", " + rs.getInt(2));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void listaCLientesMasVendidos(Connection conn) {
+		String select = "SELECT c.IDCLIENTE,SUM(fp.CANTIDAD*p.VALOR) AS tt  FROM cliente c \r\n"
+				+ "JOIN factura f ON c.IDCLIENTE = f.ID_CLIENTE_FK \r\n"
+				+ "JOIN FACTURA_PRODUCTO fp ON fp.ID_FACTURA_FK = f.IDFACTURA \r\n"
+				+ "JOIN PRODUCTO p ON p.IDPRODUCTO = fp.ID_PRODUCTO_FK\r\n"
+				+ "GROUP BY c.IDCLIENTE\r\n"
+				+ "ORDER BY tt desc";
+		PreparedStatement ps;
+		try {
+			ps = conn.prepareStatement(select);
+			ResultSet rs = ps.executeQuery();
+			System.out.println("Lista de clientes que mas gastaron: ");
+			while (rs.next()) {
+				System.out.println(rs.getString(1) + ", " + rs.getInt(2));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	

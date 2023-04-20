@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu Apr 13 16:30:28 ART 2023:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-0187-7c19-0a35-000003632660 
+Thu Apr 20 16:16:29 ART 2023:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-0187-a018-bf95-000003632660 
 on database directory C:\Users\Punto Digital\Documents\JDBCBasicoDerby\tp1 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@c387f44 
 Loaded from file:/C:/Users/Punto%20Digital/.m2/repository/org/apache/derby/derby/10.15.2.0/derby-10.15.2.0.jar
 java.vendor=Oracle Corporation
